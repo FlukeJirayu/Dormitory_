@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+/* ========== Effect ========== */
+
+.tilt-wrapper {
+    perspective: 1000px;
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.bubble {
+    position: absolute;
+    bottom: -60px;
+    border-radius: 9999px;
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.2) 40%,
+        rgba(0, 0, 0, 0) 70%
+    );
+    box-shadow: inset -3px -3px 8px rgba(255, 255, 255, 0.6),
+        inset 3px 3px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.6;
+    filter: blur(1px);
+    animation: bubbleFloat 12s ease-in-out infinite;
+}
+
+@keyframes bubbleFloat {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50vh) translateX(10px) rotate(10deg) scale(1.05);
+    }
+    100% {
+        transform: translateY(-100vh) translateX(-10px) rotate(-10deg)
+            scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* ---------------------
+   ปุ่มทั่วไป (Buttons)
+---------------------- */
+.btn {
+    @apply w-full p-2 bg-purple-400 text-white rounded-md;
+}
+
+.btn-primary {
+    @apply bg-purple-500 text-white px-4 py-2 rounded-2xl;
+}
+
+.btn-danger {
+    @apply bg-red-500 text-white px-4 py-2 rounded-2xl;
+}
+
+.btn-secondary {
+    @apply bg-gray-700 text-white px-4 py-2 rounded-2xl;
+}
+
+.btn-warning {
+    @apply bg-pink-400 text-white px-4 py-2 rounded-2xl;
+}
+
+.btn-success {
+    @apply bg-indigo-400 text-white px-4 py-2 rounded-2xl;
+}
+
+.btn-info {
+    @apply bg-indigo-300 text-white px-4 py-2 rounded-2xl;
+}
+
+.btn-edit {
+    @apply bg-indigo-400 py-2 px-2 text-white pl-4 rounded-md text-xl;
+}
+
+.btn-delete {
+    @apply bg-red-500 py-2 px-2 text-white pl-4 rounded-md text-xl;
+}
+
+
+/* ---------------------
+   ฟอร์มและคอนโทรล (Forms)
+---------------------- */
+.form-control {
+    @apply w-full p-2 border border-gray-300 rounded-md;
+}
+
+
+/* ---------------------
+   กล่องเนื้อหา (Content Boxes)
+---------------------- */
+.content {
+    @apply ml-5 mt-0 p-4 bg-gray-300 rounded-xl mr-5 mb-10;
+}
+
+.content-header {
+    @apply mb-3 text-xl border-b border-gray-700 pb-3;
+}
+
+
+/* ---------------------
+   กล่องแจ้งเตือน (Alerts)
+---------------------- */
+.alert {
+    @apply p-3 rounded-md shadow-lg pl-5;
+}
+
+.alert-danger {
+    @apply bg-red-500 text-white p-3 rounded-md mb-3;
+}
+
+.alert-success {
+    @apply bg-purple-500 text-white;
+}
+
+
+/* ---------------------
+   Sidebar (แถบด้านข้าง)
+---------------------- */
+.sidebar {
+    @apply h-4/5 mb-10 w-72 bg-gradient-to-br from-purple-700 to-purple-400 text-white rounded-xl ml-5 p-0;
+}
+
+.sidebar-header {
+    @apply bg-gradient-to-r from-purple-700 to-purple-400 text-white p-4 text-xl rounded-t-xl border-b border-purple-100;
+}
+
+.sidebar-body {
+    @apply p-3 mt-4;
+}
+
+
+/* ---------------------
+   เมนูใน Sidebar
+---------------------- */
+.menu {
+    @apply mb-4;
+}
+
+.menu li {
+    @apply p-3 pl-5 rounded-md hover:bg-purple-300 hover:text-gray-700;
+}
+
+.active {
+    @apply bg-purple-300 text-gray-700;
+}
+
+
+/* ---------------------
+   Navbar (แถบด้านบน)
+---------------------- */
+.navbar {
+    @apply p-5 text-purple-400 border-b-2 border-purple-400 m-5;
+}
+
+
+/* ---------------------
+   ตาราง (Table)
+---------------------- */
+.table {
+    @apply w-full;
+}
+
+.table th {
+    @apply bg-purple-100 p-2 pl-3;
+}
+
+.table th:first-child {
+    @apply rounded-tl-2xl;
+}
+
+.table th:last-child {
+    @apply rounded-tr-2xl;
+}
+
+.table td {
+    @apply pl-3 p-2;
+    background-color: rgb(255 255 255 / 0.7);
+}
+
+.table tr:last-child td:first-child {
+    @apply rounded-bl-2xl;
+}
+
+.table tr:last-child td:last-child {
+    @apply rounded-br-2xl;
+}
+
+tbody tr {
+    @apply border-b border-gray-300;
+}
+
+tbody tr:last-child {
+    @apply border-b-0;
+}
+
+
+/* ---------------------
+   กล่องสรุปยอด (Dashboard Boxes)
+---------------------- */
+.box-income {
+    @apply text-white bg-gradient-to-b from-indigo-300 to-indigo-400 p-4 rounded-lg w-full;
+}
+
+.box-room-fee {
+    @apply text-white bg-gradient-to-b from-pink-300 to-pink-400 p-4 rounded-lg w-full;
+}
+
+.box-debt {
+    @apply text-white bg-gradient-to-b from-purple-300 to-purple-500 p-4 rounded-lg w-full;
+}
+
+.box-pay {
+    @apply text-white bg-gradient-to-b from-gray-300 to-gray-700 p-4 rounded-lg w-full;
+}
+
+.box-balance-positive {
+    @apply text-white bg-gradient-to-b from-indigo-300 to-indigo-400 p-4 rounded-lg w-full;
+}
+
+.box-balance-negative {
+    @apply text-white bg-gradient-to-b from-red-500 to-red-500 p-4 rounded-lg w-full;
+}
+/* ---------------------
+    (footer)
+---------------------- */
+.hover-bg:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+
