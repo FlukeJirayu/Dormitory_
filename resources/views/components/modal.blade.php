@@ -1,32 +1,41 @@
-@props(['id', 'maxWidth', 'title', 'zIndex'])
+@props(['id' => null, 'maxWidth' => '2xl', 'title' => '', 'zIndex' => 999])
 
 @php
-    $id = $id ?? md5($attributes->wire('model'));
-    $maxWidth = [
+    $id = $id ?? md5($attributes->wire('model') ?? Str::random());
+
+    $maxWidthClass = [
         'sm' => 'sm:max-w-sm',
         'md' => 'sm:max-w-md',
         'lg' => 'sm:max-w-lg',
         'xl' => 'sm:max-w-xl',
         '2xl' => 'sm:max-w-2xl',
-    ][$maxWidth ?? '2xl'];
-
-    // z-index
-    $zIndex = $zIndex ?? 999;
+    ][$maxWidth] ?? 'sm:max-w-2xl';
 @endphp
 
-<div x-data="{ show: @entangle($attributes->wire('model')) }" x-on:close.stop="show = false" x-on:keydown.escape.window="show = false" x-show="show"
-    class="fixed inset-0 z-{{ $zIndex }} px-4 py-6 overflow-y-auto sm:px-0" style="display: none;">
-    <div class="fixed inset-0 transform transition-all" x-on:click="show = false">
-        <div class="absolute inset-0 bg-gray-200 opacity-30"></div>
-    </div>
-
-    <div class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
-        x-show="show" x-trap.inert.noscroll="show">
-        <div class="px-3 py-3 bg-orange-500 text-white">
-            <div class="text-lg font-medium">{{ $title }}</div>
+<div
+    x-data="{ show: @entangle($attributes->wire('model')) }"
+    x-show="show"
+    x-on:keydown.escape.window="show = false"
+    x-on:close.window="show = false"
+    x-cloak
+    class="fixed inset-0 z-{{ $zIndex }} flex items-center justify-center px-4 py-6 overflow-y-auto bg-black/90"
+>
+    <!-- Modal box -->
+    <div
+        class="w-full {{ $maxWidthClass }} bg-white rounded-lg shadow-xl transform transition-all"
+        @click.away="show = false"
+        x-show="show"
+        x-trap.inert.noscroll="show"
+        x-transition
+    >
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center px-4 py-3 bg-indigo-400 text-white rounded-t-lg">
+            <h2 class="text-lg font-semibold">{{ $title }}</h2>
+            <button class="text-xl hover:text-gray-200" @click="show = false">&times;</button>
         </div>
 
-        <div class="px-3 py-3 text-gray-800">
+        <!-- Modal Content -->
+        <div class="px-5 py-4 text-gray-800">
             {{ $slot }}
         </div>
     </div>
