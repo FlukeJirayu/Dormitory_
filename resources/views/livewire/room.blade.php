@@ -73,4 +73,67 @@
             @endif
         </div>
     </div>
+
+
+    <x-modal wire:model="showModal" title="ห้องพัก" maxWidth="xl">
+        @if ($errors->any())
+            <div class="bg-red-100 text-red-800 p-3 rounded mb-4">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+
+        <div class="flex flex-wrap gap-5 mt-3">
+            <div class="w-1/2">
+                <label class="text-gray-700">หมายเลขเริ่มต้น</label>
+                <input type="text" class="form-control" wire:model="from_number">
+            </div>
+            <div class="w-1/2">
+                <label class="text-gray-700">ถึงหมายเลข</label>
+                <input type="text" class="form-control" wire:model="to_number">
+            </div>
+            <div class="w-1/2">
+                <label class="text-gray-700">ค่าเช่าต่อวัน</label>
+                <input type="text" class="form-control" wire:model="price_per_day">
+            </div>
+            <div class="w-1/2">
+                <label class="text-gray-700">ค่าเช่าต่อเดือน</label>
+                <input type="text" class="form-control" wire:model="price_per_month">
+            </div>
+        </div>
+
+        <div class="mt-5 flex justify-end gap-2 pb-3">
+            <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded" wire:click="createRoom">
+                <i class="fa-solid fa-check mr-2"></i> สร้างห้องพัก
+            </button>
+            <button class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded" wire:click="showModal = false">
+                <i class="fa-solid fa-times mr-2"></i> ยกเลิก
+            </button>
+        </div>
+    </x-modal>
+
+    <x-modal wire:model="showModalEdit" title="แก้ไขห้องพัก" maxWidth="xl">
+        <div class="mb-2 text-gray-700">ห้องพัก</div>
+        <input type="text" class="form-control" wire:model="name">
+
+        <div class="mt-3 text-gray-700">ราคาเช่าต่อวัน</div>
+        <input type="text" class="form-control" wire:model="price_day">
+
+        <div class="mt-3 text-gray-700">ราคาเช่าต่อเดือน</div>
+        <input type="text" class="form-control" wire:model="price_month">
+
+        <div class="mt-5 flex justify-end gap-2 pb-3">
+            <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded" wire:click="updateRoom">
+                <i class="fa-solid fa-check mr-2"></i> บันทึก
+            </button>
+            <button class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded" wire:click="showModalEdit = false">
+                <i class="fa-solid fa-times mr-2"></i> ยกเลิก
+            </button>
+        </div>
+    </x-modal>
+
+    <x-modal-confirm showModalDelete="showModalDelete" title="ลบห้องพัก"
+        text="คุณต้องการลบห้องพัก {{ $nameForDelete }} หรือไม่" clickConfirm="deleteRoom"
+        clickCancel="showModalDelete = false" />
 </div>
