@@ -20,6 +20,9 @@ class Room extends Component {
     public $price_per_month;
     public $nameForDelete;
 
+    // เพิ่มตัวแปรสำหรับค้นหา
+    public $searchTerm = '';
+
     //
     // paginate
     //
@@ -28,6 +31,19 @@ class Room extends Component {
     public $totalPages;
 
     public function mount() {
+        $this->fetchData();
+    }
+
+    // เพิ่มฟังก์ชันสำหรับการค้นหา
+    public function updatedSearchTerm() {
+        $this->currentPage = 1; // รีเซ็ตไปหน้าแรกเมื่อค้นหา
+        $this->fetchData();
+    }
+
+    // เพิ่มฟังก์ชันล้างการค้นหา
+    public function clearSearch() {
+        $this->searchTerm = '';
+        $this->currentPage = 1;
         $this->fetchData();
     }
 
@@ -97,13 +113,34 @@ class Room extends Component {
         $start = ($this->currentPage - 1) * $this->itemsPerPage;
         $end = $this->itemsPerPage;
 
-        $this->rooms = RoomModel::where('status', 'use')
-            ->orderBy('id', 'asc')
+        // สร้าง query พื้นฐาน
+        $query = RoomModel::where('status', 'use');
+
+        // เพิ่มเงื่อนไขการค้นหา
+        if (!empty($this->searchTerm)) {
+            $query->where(function($q) {
+                $q->where('name', 'LIKE', '%' . $this->searchTerm . '%')
+                  ->orWhere('price_per_day', 'LIKE', '%' . $this->searchTerm . '%')
+                  ->orWhere('price_per_month', 'LIKE', '%' . $this->searchTerm . '%');
+            });
+        }
+
+        // ดึงข้อมูลพร้อม pagination
+        $this->rooms = $query->orderBy('id', 'asc')
             ->skip($start)
             ->take($end)
             ->get();
 
-        $totalRooms = RoomModel::where('status', 'use')->count();
+        // คำนวณจำนวนหน้าทั้งหมด
+        $totalRooms = RoomModel::where('status', 'use');
+        if (!empty($this->searchTerm)) {
+            $totalRooms->where(function($q) {
+                $q->where('name', 'LIKE', '%' . $this->searchTerm . '%')
+                  ->orWhere('price_per_day', 'LIKE', '%' . $this->searchTerm . '%')
+                  ->orWhere('price_per_month', 'LIKE', '%' . $this->searchTerm . '%');
+            });
+        }
+        $totalRooms = $totalRooms->count();
         $this->totalPages = ceil($totalRooms / $this->itemsPerPage);
     }
 

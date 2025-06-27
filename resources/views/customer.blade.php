@@ -1,4 +1,4 @@
 @extends('layouts.backoffice')
 @section('content')
-    @livewire('room')
+    @livewire('customer')
 @endsection

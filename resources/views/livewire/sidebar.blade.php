@@ -25,7 +25,7 @@
                     <i class="fa-solid fa-home me-2"></i> ห้องพัก
                 </li>
 
-                <li wire:click="changeMenu('user/index')" @if ($currentMenu == 'user/index') class="active" @endif
+                <li wire:click="changeMenu('customer')" @if ($currentMenu == 'customer') class="active" @endif
                     style="padding: 10px 15px; border-radius: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
                     <i class="fa-solid fa-user me-2"></i> ผู้เข้าพัก
                 </li>
