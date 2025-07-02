@@ -1,4 +1,4 @@
-@props(['id' => null, 'maxWidth' => '2xl', 'title' => '', 'zIndex' => 999])
+@props(['id' => null, 'maxWidth' => '2xl', 'title' => '', 'zIndex'])
 
 @php
     $id = $id ?? md5($attributes->wire('model') ?? Str::random());
@@ -10,6 +10,8 @@
         'xl' => 'sm:max-w-xl',
         '2xl' => 'sm:max-w-2xl',
     ][$maxWidth] ?? 'sm:max-w-2xl';
+
+    $zIndex = $zIndex ?? 999;
 @endphp
 
 <div

@@ -15,7 +15,7 @@
                     <i class="fa-solid fa-chart-line me-2"></i> Dashboard
                 </li>
 
-                <li wire:click="changeMenu('expense/index')" @if ($currentMenu == 'expense/index') class="active" @endif
+                <li wire:click="changeMenu('pay')" @if ($currentMenu == 'pay') class="active" @endif
                     style="padding: 10px 15px; border-radius: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
                     <i class="fa-solid fa-building me-2"></i> บันทึกค่าใช้จ่าย
                 </li>
@@ -30,7 +30,7 @@
                     <i class="fa-solid fa-user me-2"></i> ผู้เข้าพัก
                 </li>
 
-                <li wire:click="changeMenu('user/index')" @if ($currentMenu == 'user/index') class="active" @endif
+                <li wire:click="changeMenu('user')" @if ($currentMenu == 'user') class="active" @endif
                     style="padding: 10px 15px; border-radius: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
                     <i class="fa-solid fa-gear me-2"></i> ผู้ใช้งาน
                 </li>
