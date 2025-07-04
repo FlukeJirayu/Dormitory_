@@ -15,6 +15,11 @@
                     <i class="fa-solid fa-chart-line me-2"></i> Dashboard
                 </li>
 
+                <li wire:click="changeMenu('billing')" @if ($currentMenu == 'billing') class="active" @endif
+                    style="padding: 10px 15px; border-radius: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
+                    <i class="fa-solid fa-building me-2"></i> ใบเสร็จรับเงิน
+                </li>
+
                 <li wire:click="changeMenu('pay')" @if ($currentMenu == 'pay') class="active" @endif
                     style="padding: 10px 15px; border-radius: 8px; cursor: pointer; width: 100%; box-sizing: border-box;">
                     <i class="fa-solid fa-building me-2"></i> บันทึกค่าใช้จ่าย
