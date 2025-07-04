@@ -229,18 +229,20 @@
                 <label class="block text-sm font-medium text-gray-700">
                     <i class="fa fa-play mr-2 text-gray-500"></i>หมายเลขเริ่มต้น
                 </label>
-                <input type="text"
+                <input type="number"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     wire:model="from_number" placeholder="เช่น 101">
+                @error('from_number') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">
                     <i class="fa fa-stop mr-2 text-gray-500"></i>ถึงหมายเลข
                 </label>
-                <input type="text"
+                <input type="number"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     wire:model="to_number" placeholder="เช่น 110">
+                @error('to_number') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="space-y-2">
@@ -248,11 +250,12 @@
                     <i class="fa fa-calendar-day mr-2 text-gray-500"></i>ค่าเช่าต่อวัน
                 </label>
                 <div class="relative">
-                    <input type="text"
+                    <input type="number" step="0.01"
                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         wire:model="price_per_day" placeholder="0">
                     <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">บาท</span>
                 </div>
+                @error('price_per_day') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="space-y-2">
@@ -260,11 +263,12 @@
                     <i class="fa fa-calendar-alt mr-2 text-gray-500"></i>ค่าเช่าต่อเดือน
                 </label>
                 <div class="relative">
-                    <input type="text"
+                    <input type="number" step="0.01"
                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         wire:model="price_per_month" placeholder="0">
                     <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">บาท</span>
                 </div>
+                @error('price_per_month') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
         </div>
 
@@ -276,7 +280,7 @@
             </button>
             <button
                 class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center"
-                wire:click="showModal = false">
+                wire:click="closeModal">
                 <i class="fa-solid fa-times mr-2"></i> ยกเลิก
             </button>
         </div>
@@ -284,6 +288,20 @@
 
     <!-- Enhanced Edit Room Modal -->
     <x-modal wire:model="showModalEdit" title="แก้ไขห้องพัก" maxWidth="xl">
+        @if ($errors->any())
+            <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-6">
+                <div class="flex items-center mb-2">
+                    <i class="fa fa-exclamation-triangle mr-2"></i>
+                    <span class="font-medium">กรุณาตรวจสอบข้อมูล</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="space-y-6">
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">
@@ -292,6 +310,7 @@
                 <input type="text"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     wire:model="name" placeholder="หมายเลขห้อง">
+                @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -300,11 +319,12 @@
                         <i class="fa fa-calendar-day mr-2 text-gray-500"></i>ราคาเช่าต่อวัน
                     </label>
                     <div class="relative">
-                        <input type="text"
+                        <input type="number" step="0.01"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            wire:model="price_day" placeholder="0">
+                            wire:model="price_per_day" placeholder="0">
                         <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">บาท</span>
                     </div>
+                    @error('price_per_day') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="space-y-2">
@@ -312,11 +332,12 @@
                         <i class="fa fa-calendar-alt mr-2 text-gray-500"></i>ราคาเช่าต่อเดือน
                     </label>
                     <div class="relative">
-                        <input type="text"
+                        <input type="number" step="0.01"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            wire:model="price_month" placeholder="0">
+                            wire:model="price_per_month" placeholder="0">
                         <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">บาท</span>
                     </div>
+                    @error('price_per_month') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
@@ -329,14 +350,14 @@
             </button>
             <button
                 class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center"
-                wire:click="showModalEdit = false">
+                wire:click="closeModalEdit">
                 <i class="fa-solid fa-times mr-2"></i> ยกเลิก
             </button>
         </div>
     </x-modal>
 
-    <!-- Delete Confirmation Modal (unchanged) -->
+    <!-- Delete Confirmation Modal -->
     <x-modal-confirm showModalDelete="showModalDelete" title="ลบห้องพัก"
         text="คุณต้องการลบห้องพัก {{ $nameForDelete }} หรือไม่" clickConfirm="deleteRoom"
-        clickCancel="showModalDelete = false" />
+        clickCancel="closeModalDelete" />
 </div>
