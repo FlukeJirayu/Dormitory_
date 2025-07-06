@@ -1,0 +1,13 @@
+*   [33m8c3282b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #1 from FlukeJirayu/rescue-branch
+[31m|[m[32m\[m  
+[31m|[m * [33mdfb9b21[m Add Pay and User
+[31m|[m[31m/[m  
+* [33m5b96782[m The issue regarding the 'empty' error has been resolved, and the customer module has been implemented.
+* [33mc0483c0[m ทำหน้าตาระบบใหม่เเละเพิ่มผู้เข้าพัก
+* [33m5910909[m ปรับเเก้ความผิดพลาดห้องพัก
+*   [33m4fb513c[m Merge branch 'main' of https://github.com/FlukeJirayu/Dormitory_
+[33m|[m[34m\[m  
+[33m|[m * [33m9ccc0f6[m Update README.md
+* [34m|[m [33mfd5e3e9[m ปรับ sidebar ใหม่ สวยขึ้นด้วย Tailwind CSS และแก้ Bug ห้องพัก
+[34m|[m[34m/[m  
+* [33mfdeffc5[m Initial commit for Dormitory_ project

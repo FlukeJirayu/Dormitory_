@@ -7,7 +7,7 @@ use App\Models\BillingModel;
 use App\Models\CustomerModel;
 use App\Models\RoomModel;
 use App\Models\OrganizationModel;
-use Illuminate\Support\Facades\Log;
+
 
 class Billing extends Component {
     public $showModal = false;
@@ -129,11 +129,12 @@ class Billing extends Component {
     }
 
     public function computeSumAmount() {
-        if ($this->waterUnit > 0) {
+        // Fix: Check for division by zero before calculating
+        if ($this->waterUnit > 0 && $this->waterCostPerUnit > 0) {
             $this->amountWater = $this->waterUnit * $this->waterCostPerUnit;
         }
 
-        if ($this->electricUnit > 0) {
+        if ($this->electricUnit > 0 && $this->electricCostPerUnit > 0) {
             $this->amountElectric = $this->electricUnit * $this->electricCostPerUnit;
         }
 
@@ -189,8 +190,19 @@ class Billing extends Component {
         $this->roomNameForEdit = $this->billing->room->name;
     
         $organization = OrganizationModel::first();    
-        $this->waterUnit = $this->amountWater / $organization->amount_water_per_unit;
-        $this->electricUnit = $this->amountElectric / $organization->amount_electric_per_unit;
+        
+        // Fix: Check for division by zero before calculating units
+        if ($organization->amount_water_per_unit > 0) {
+            $this->waterUnit = $this->amountWater / $organization->amount_water_per_unit;
+        } else {
+            $this->waterUnit = 0;
+        }
+        
+        if ($organization->amount_electric_per_unit > 0) {
+            $this->electricUnit = $this->amountElectric / $organization->amount_electric_per_unit;
+        } else {
+            $this->electricUnit = 0;
+        }
 
         $this->computeSumAmount();
     }

@@ -22,6 +22,8 @@ class BillingModel extends Model
     'amount_wash',
     'amount_bin',
     'amount_etc',
+    'money_added',
+    'payed_date',
   ];
   public $timestamps = false;
 

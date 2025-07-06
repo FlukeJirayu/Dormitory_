@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -11,11 +12,11 @@ class Company extends Component
     use WithFileUploads;
 
     public $name, $address, $phone, $tax_code, $logo;
-    // public $amount_water = 0;
-    // public $amount_water_per_unit = 0;
-    // public $amount_electric_per_unit = 0;
-    // public $amount_internet = 0;
-    // public $amount_etc = 0;
+    public $amount_water = 0;
+    public $amount_water_per_unit = 0;
+    public $amount_electric_per_unit = 0;
+    public $amount_internet = 0;
+    public $amount_etc = 0;
 
     public $logoUrl;
     public $flashMessage;
@@ -32,11 +33,11 @@ class Company extends Component
         $this->address = $organization->address ?? '';
         $this->phone = $organization->phone ?? '';
         $this->tax_code = $organization->tax_code ?? '';
-        // $this->amount_water = $organization->amount_water ?? 0;
-        // $this->amount_water_per_unit = $organization->amount_water_per_unit ?? 0;
-        // $this->amount_electric_per_unit = $organization->amount_electric_per_unit ?? 0;
-        // $this->amount_internet = $organization->amount_internet ?? 0;
-        // $this->amount_etc = $organization->amount_etc ?? 0;
+        $this->amount_water = $organization->amount_water ?? 0;
+        $this->amount_water_per_unit = $organization->amount_water_per_unit ?? 0;
+        $this->amount_electric_per_unit = $organization->amount_electric_per_unit ?? 0;
+        $this->amount_internet = $organization->amount_internet ?? 0;
+        $this->amount_etc = $organization->amount_etc ?? 0;
 
         if (isset($organization->logo)) {
             $this->logoUrl = Storage::disk('public')->url($organization->logo);
@@ -48,7 +49,8 @@ class Company extends Component
         return view('livewire.company');
     }
 
-    public function save() {
+    public function save()
+    {
         $logo = '';
 
         if ($this->logo) {
@@ -79,11 +81,11 @@ class Company extends Component
         if ($logo != '') {
             $organization->logo = $logo;
         }
-        // $organization->amount_water = $this->amount_water;
-        // $organization->amount_water_per_unit = $this->amount_water_per_unit;
-        // $organization->amount_electric_per_unit = $this->amount_electric_per_unit;
-        // $organization->amount_internet = $this->amount_internet;
-        // $organization->amount_etc = $this->amount_etc;
+        $organization->amount_water = $this->amount_water;
+        $organization->amount_water_per_unit = $this->amount_water_per_unit;
+        $organization->amount_electric_per_unit = $this->amount_electric_per_unit;
+        $organization->amount_internet = $this->amount_internet;
+        $organization->amount_etc = $this->amount_etc;
 
         $organization->save();
 
