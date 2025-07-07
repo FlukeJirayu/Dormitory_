@@ -38,14 +38,14 @@ class BillingModel extends Model
 
   public function sumAmount()
   {
-    return $this->amount_rent +
-      $this->amount_water +
-      $this->amount_electric +
-      $this->amount_internet +
-      $this->amount_fitness +
-      $this->amount_wash +
-      $this->amount_bin +
-      $this->amount_etc;
+    return floatval($this->amount_rent ?? 0) +
+      floatval($this->amount_water ?? 0) +
+      floatval($this->amount_electric ?? 0) +
+      floatval($this->amount_internet ?? 0) +
+      floatval($this->amount_fitness ?? 0) +
+      floatval($this->amount_wash ?? 0) +
+      floatval($this->amount_bin ?? 0) +
+      floatval($this->amount_etc ?? 0);
   }
   public function getStatusName()
   {

@@ -8,7 +8,6 @@ use App\Models\CustomerModel;
 use App\Models\RoomModel;
 use App\Models\OrganizationModel;
 
-
 class Billing extends Component {
     public $showModal = false;
     public $showModalDelete = false; 
@@ -96,11 +95,13 @@ class Billing extends Component {
     }
 
     public function openModal() {
+        $this->resetForm(); // รีเซ็ตก่อนเปิด modal
         $this->showModal = true;
     }
 
     public function closeModal() {
         $this->showModal = false;
+        $this->resetForm(); // รีเซ็ตเมื่อปิด modal
     }
 
     public function selectedRoom() {
@@ -108,45 +109,83 @@ class Billing extends Component {
         $customer = CustomerModel::where('room_id', $this->roomId)->first();
         $organization = OrganizationModel::first();
 
-        if ($organization->amount_water > 0) {
-            $this->amountWater = $organization->amount_water;
-        } else {
-            $this->waterCostPerUnit = $organization->amount_water_per_unit;
-        }
-
-        if ($organization->amount_electric_per_unit > 0) {
-            $this->electricCostPerUnit = $organization->amount_electric_per_unit;
-        }
-
-        $this->amountInternet = $organization->amount_internet;
-        $this->amountEtc = $organization->amount_etc;
+        // แก้ไข: ตรวจสอบค่าและกำหนดค่าเริ่มต้น
+        $this->waterCostPerUnit = $organization->amount_water_per_unit ?? 0;
+        $this->electricCostPerUnit = $organization->amount_electric_per_unit ?? 0;
         
-        $this->customerName = $customer->name;
-        $this->customerPhone = $customer->phone;
-        $this->amountRent = $room->price_per_month;
+        // แก้ไข: ตรวจสอบรูปแบบการคิดค่าน้ำ
+        if ($organization->amount_water > 0) {
+            // ถ้ามีค่าคงที่ ให้ใช้ค่าคงที่
+            $this->amountWater = $organization->amount_water;
+            $this->waterUnit = 0; // ไม่ต้องใส่หน่วยถ้าเป็นค่าคงที่
+        } else {
+            // ถ้าไม่มีค่าคงที่ ให้คำนวณตามหน่วย
+            $this->amountWater = 0;
+            $this->waterUnit = 0;
+        }
+
+        // แก้ไข: ตรวจสอบรูปแบบการคิดค่าไฟ
+        if ($organization->amount_electric > 0) {
+            // ถ้ามีค่าคงที่ ให้ใช้ค่าคงที่
+            $this->amountElectric = $organization->amount_electric;
+            $this->electricUnit = 0; // ไม่ต้องใส่หน่วยถ้าเป็นค่าคงที่
+        } else {
+            // ถ้าไม่มีค่าคงที่ ให้คำนวณตามหน่วย
+            $this->amountElectric = 0;
+            $this->electricUnit = 0;
+        }
+
+        $this->amountInternet = $organization->amount_internet ?? 0;
+        $this->amountEtc = $organization->amount_etc ?? 0;
+        $this->amountFitness = $organization->amount_fitness ?? 0;
+        $this->amountWash = $organization->amount_wash ?? 0;
+        $this->amountBin = $organization->amount_bin ?? 0;
+        
+        $this->customerName = $customer->name ?? '';
+        $this->customerPhone = $customer->phone ?? '';
+        $this->amountRent = $room->price_per_month ?? 0;
 
         $this->computeSumAmount();
     }
 
     public function computeSumAmount() {
-        // Fix: Check for division by zero before calculating
+        // แก้ไข: ปรับปรุงการคำนวณให้ถูกต้อง
+        
+        // คำนวณค่าน้ำ - เฉพาะเมื่อมีหน่วยและราคาต่อหน่วย
         if ($this->waterUnit > 0 && $this->waterCostPerUnit > 0) {
             $this->amountWater = $this->waterUnit * $this->waterCostPerUnit;
         }
+        // หากไม่มีหน่วย แต่มีค่าคงที่ ให้คงค่าเดิม (ไม่ต้องเปลี่ยน)
 
+        // คำนวณค่าไฟ - เฉพาะเมื่อมีหน่วยและราคาต่อหน่วย
         if ($this->electricUnit > 0 && $this->electricCostPerUnit > 0) {
             $this->amountElectric = $this->electricUnit * $this->electricCostPerUnit;
         }
+        // หากไม่มีหน่วย แต่มีค่าคงที่ ให้คงค่าเดิม (ไม่ต้องเปลี่ยน)
 
-        $this->amountWater = $this->amountWater ?? 0;
-        $this->amountElectric = $this->amountElectric ?? 0;
+        // แก้ไข: ตรวจสอบค่า null และแปลงเป็น numeric
+        $this->amountRent = floatval($this->amountRent ?? 0);
+        $this->amountWater = floatval($this->amountWater ?? 0);
+        $this->amountElectric = floatval($this->amountElectric ?? 0);
+        $this->amountInternet = floatval($this->amountInternet ?? 0);
+        $this->amountFitness = floatval($this->amountFitness ?? 0);
+        $this->amountWash = floatval($this->amountWash ?? 0);
+        $this->amountBin = floatval($this->amountBin ?? 0);
+        $this->amountEtc = floatval($this->amountEtc ?? 0);
 
+        // คำนวณยอดรวม
         $this->sumAmount = $this->amountRent + $this->amountWater + $this->amountElectric 
-        + $this->amountInternet + $this->amountFitness + $this->amountWash 
-        + $this->amountBin + $this->amountEtc;
+            + $this->amountInternet + $this->amountFitness + $this->amountWash 
+            + $this->amountBin + $this->amountEtc;
+            
+        // แก้ไข: ป้องกันค่าติดลบ
+        $this->sumAmount = max(0, $this->sumAmount);
     }
 
     public function save() {
+        // แก้ไข: คำนวณใหม่ก่อนบันทึก
+        $this->computeSumAmount();
+        
         $billing = new BillingModel();
 
         if ($this->id != null) {
@@ -157,24 +196,42 @@ class Billing extends Component {
         $billing->created_at = $this->createdAt;
         $billing->status = $this->status;
         $billing->remark = $this->remark ?? '';
-        $billing->amount_rent = $this->amountRent ?? 0;
-        $billing->amount_water = $this->amountWater ?? 0;
-        $billing->amount_electric = $this->amountElectric ?? 0;
-        $billing->amount_internet = $this->amountInternet ?? 0;
-        $billing->amount_fitness = $this->amountFitness ?? 0;
-        $billing->amount_wash = $this->amountWash ?? 0;
-        $billing->amount_bin = $this->amountBin ?? 0;
-        $billing->amount_etc = $this->amountEtc ?? 0;
+        $billing->amount_rent = floatval($this->amountRent ?? 0);
+        $billing->amount_water = floatval($this->amountWater ?? 0);
+        $billing->amount_electric = floatval($this->amountElectric ?? 0);
+        $billing->amount_internet = floatval($this->amountInternet ?? 0);
+        $billing->amount_fitness = floatval($this->amountFitness ?? 0);
+        $billing->amount_wash = floatval($this->amountWash ?? 0);
+        $billing->amount_bin = floatval($this->amountBin ?? 0);
+        $billing->amount_etc = floatval($this->amountEtc ?? 0);
         $billing->save();
 
         $this->fetchData();
         $this->closeModal();
+    }
 
+    // แก้ไข: ปรับปรุงฟังก์ชัน resetForm
+    private function resetForm() {
         $this->id = null;
         $this->waterUnit = 0;
         $this->electricUnit = 0;
         $this->electricCostPerUnit = 0;
         $this->waterCostPerUnit = 0;
+        $this->amountRent = 0;
+        $this->amountWater = 0;
+        $this->amountElectric = 0;
+        $this->amountInternet = 0;
+        $this->amountFitness = 0;
+        $this->amountWash = 0;
+        $this->amountBin = 0;
+        $this->amountEtc = 0;
+        $this->sumAmount = 0;
+        $this->remark = '';
+        $this->roomNameForEdit = '';
+        $this->customerName = '';
+        $this->customerPhone = '';
+        $this->status = 'wait';
+        $this->createdAt = date('Y-m-d');
     }
 
     public function openModalEdit($id) {
@@ -183,32 +240,56 @@ class Billing extends Component {
         $this->id = $id;
         $this->roomId = $this->billing->room_id;
 
-        $this->selectedRoom();
-        $this->amountWater = $this->billing->amount_water;
-        $this->amountElectric = $this->billing->amount_electric;
+        // แก้ไข: โหลดข้อมูลจาก billing และตรวจสอบค่า null
+        $this->amountRent = floatval($this->billing->amount_rent ?? 0);
+        $this->amountWater = floatval($this->billing->amount_water ?? 0);
+        $this->amountElectric = floatval($this->billing->amount_electric ?? 0);
+        $this->amountInternet = floatval($this->billing->amount_internet ?? 0);
+        $this->amountFitness = floatval($this->billing->amount_fitness ?? 0);
+        $this->amountWash = floatval($this->billing->amount_wash ?? 0);
+        $this->amountBin = floatval($this->billing->amount_bin ?? 0);
+        $this->amountEtc = floatval($this->billing->amount_etc ?? 0);
+        $this->remark = $this->billing->remark ?? '';
+        $this->createdAt = $this->billing->created_at;
+        $this->status = $this->billing->status;
 
-        $this->roomNameForEdit = $this->billing->room->name;
+        $this->roomNameForEdit = $this->billing->room->name ?? '';
     
         $organization = OrganizationModel::first();    
         
-        // Fix: Check for division by zero before calculating units
-        if ($organization->amount_water_per_unit > 0) {
-            $this->waterUnit = $this->amountWater / $organization->amount_water_per_unit;
+        // แก้ไข: ปรับปรุงการคำนวณหน่วย
+        if ($organization && $organization->amount_water_per_unit > 0) {
+            $this->waterCostPerUnit = $organization->amount_water_per_unit;
+            if ($this->amountWater > 0) {
+                $this->waterUnit = intval($this->amountWater / $organization->amount_water_per_unit);
+            }
         } else {
             $this->waterUnit = 0;
+            $this->waterCostPerUnit = 0;
         }
         
-        if ($organization->amount_electric_per_unit > 0) {
-            $this->electricUnit = $this->amountElectric / $organization->amount_electric_per_unit;
+        if ($organization && $organization->amount_electric_per_unit > 0) {
+            $this->electricCostPerUnit = $organization->amount_electric_per_unit;
+            if ($this->amountElectric > 0) {
+                $this->electricUnit = intval($this->amountElectric / $organization->amount_electric_per_unit);
+            }
         } else {
             $this->electricUnit = 0;
+            $this->electricCostPerUnit = 0;
         }
 
+        // โหลดข้อมูลลูกค้า
+        $customer = CustomerModel::where('room_id', $this->roomId)->first();
+        $this->customerName = $customer->name ?? '';
+        $this->customerPhone = $customer->phone ?? '';
+
+        // แก้ไข: คำนวณยอดรวมใหม่
         $this->computeSumAmount();
     }
 
     public function closeModalEdit() {
         $this->showModal = false;
+        $this->resetForm();
     }
 
     public function openModalDelete($id, $name) {
@@ -233,17 +314,26 @@ class Billing extends Component {
         $billing = BillingModel::find($id);
         $this->showModalGetMoney = true;
         $this->id = $id;
-        $this->roomNameForGetMoney = $billing->room->name;
-        $this->customerNameForGetMoney = $billing->getCustomer()->name;
-        $this->sumAmountForGetMoney = $billing->sumAmount();
+        $this->roomNameForGetMoney = $billing->room->name ?? '';
+        $this->customerNameForGetMoney = $billing->getCustomer()->name ?? '';
+        $this->sumAmountForGetMoney = floatval($billing->sumAmount() ?? 0);
         $this->payedDateForGetMoney = date('Y-m-d');
-        $this->moneyAdded = $billing->money_added ?? 0;
+        
+        // แก้ไข: ตรวจสอบค่า money_added
+        $this->moneyAdded = floatval($billing->money_added ?? 0);
         $this->remarkForGetMoney = $billing->remark ?? '';
-        $this->amountForGetMoney = $this->sumAmountForGetMoney + $this->moneyAdded;
+        
+        // แก้ไข: คำนวณใหม่ทุกครั้ง
+        $this->calculateAmountForGetMoney();
     }
 
     public function closeModalGetMoney() {
         $this->showModalGetMoney = false;
+        $this->resetGetMoneyForm();
+    }
+
+    // แก้ไข: เพิ่มฟังก์ชัน resetGetMoneyForm
+    private function resetGetMoneyForm() {
         $this->id = null;
         $this->roomNameForGetMoney = '';
         $this->customerNameForGetMoney = '';
@@ -254,10 +344,19 @@ class Billing extends Component {
         $this->amountForGetMoney = 0;
     }
 
+    // แก้ไข: ปรับปรุงฟังก์ชันคำนวณ
+    private function calculateAmountForGetMoney() {
+        $this->moneyAdded = floatval($this->moneyAdded ?? 0);
+        $this->sumAmountForGetMoney = floatval($this->sumAmountForGetMoney ?? 0);
+        $this->amountForGetMoney = $this->sumAmountForGetMoney + $this->moneyAdded;
+        
+        // แก้ไข: ป้องกันค่าติดลบ
+        $this->amountForGetMoney = max(0, $this->amountForGetMoney);
+    }
+
     public function handleChangeAmountForGetMoney() {
-        $billing = BillingModel::find($this->id);
-        $this->moneyAdded = $this->moneyAdded == '' ? 0 : $this->moneyAdded;
-        $this->amountForGetMoney = $billing->sumAmount() + $this->moneyAdded;
+        // แก้ไข: ใช้ฟังก์ชันคำนวณใหม่
+        $this->calculateAmountForGetMoney();
     }
 
     public function printBilling($billingId) {
@@ -266,13 +365,17 @@ class Billing extends Component {
 
     public function saveGetMoney() {
         $billing = BillingModel::find($this->id);
-        $billing->payed_date = $this->payedDateForGetMoney;
-        $billing->remark = $this->remarkForGetMoney;
-        $billing->money_added = $this->moneyAdded;
-        $billing->status = 'paid';
-        $billing->save();
+        
+        // แก้ไข: ตรวจสอบข้อมูลก่อนบันทึก
+        if ($billing) {
+            $billing->payed_date = $this->payedDateForGetMoney;
+            $billing->remark = $this->remarkForGetMoney ?? '';
+            $billing->money_added = floatval($this->moneyAdded ?? 0);
+            $billing->status = 'paid';
+            $billing->save();
 
-        $this->fetchData();
-        $this->closeModalGetMoney();
+            $this->fetchData();
+            $this->closeModalGetMoney();
+        }
     }
 }

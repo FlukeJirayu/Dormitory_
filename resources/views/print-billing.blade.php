@@ -139,11 +139,11 @@
             </tr>
             <tr>
                 <td>ค่าเก็บขยะ</td>
-                <td align="right">{{ number_format($billing->bin) }}</td>
+                <td align="right">{{ number_format($billing->amount_bin) }}</td>
             </tr>
             <tr>
                 <td>ค่าใช้จ่ายอื่น ๆ</td>
-                <td align="right">{{ number_format($billing->etc) }}</td>
+                <td align="right">{{ number_format($billing->amount_etc) }}</td>
             </tr>
         </tbody>
         <tfoot>
