@@ -1,67 +1,210 @@
-<div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-300 via-indigo-300 to-pink-300">
-    <!-- เอฟเฟกต์แสงเวียน -->
-    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div class="absolute w-[150%] h-[150%] animate-spin-slow bg-white rounded-full opacity-25 blur-3xl"></div>
-        <div class="absolute w-full h-full animate-pulse bg-white rounded-full opacity-20 blur-[120px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - Visitor Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-        <!-- ฟองสบู่ -->
-        @for ($i = 0; $i < 20; $i++)
-            <div class="bubble"
-                style="
-                    left: {{ rand(0, 100) }}%;
-                    width: {{ rand(20, 60) }}px;
-                    height: {{ rand(20, 60) }}px;
-                    animation-delay: {{ rand(0, 100) / 10 }}s;
-                    animation-duration: {{ rand(15, 30) }}s;
-                ">
-            </div>
-        @endfor
-    </div>
+        .signin-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
 
-    <!-- กล่องฟอร์ม -->
-    <div class="z-10 tilt-wrapper">
-        <div id="tilt-card"
-            class="w-full max-w-xl bg-white border border-purple-100 rounded-3xl shadow-2xl p-12 backdrop-blur-sm bg-opacity-90 transition-transform duration-300 preserve-3d animate-float">
-            <h2 class="text-2xl font-bold text-purple-700 mb-6 text-center flex items-center justify-center gap-2">
-                <i class="fa fa-user-circle text-purple-500 text-2xl"></i>
-                Sign In to Dormitory
-            </h2>
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            background: #4285f4;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.3);
+        }
 
-            <form wire:submit.prevent="signin" class="space-y-5">
-                @csrf
-                <div>
-                    <label class="text-sm text-gray-700">Username</label>
-                    <input type="text" wire:model="username"
-                        class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-300 transition" />
-                    @if (isset($errorUsername))
-                        <div class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                            <i class="fa fa-exclamation-circle"></i> {{ $errorUsername }}
-                        </div>
-                    @endif
-                </div>
+        .app-icon i {
+            font-size: 40px;
+            color: white;
+        }
 
-                <div>
-                    <label class="text-sm text-gray-700">Password</label>
-                    <input type="password" wire:model="password"
-                        class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-300 transition" />
-                    @if (isset($errorPassword))
-                        <div class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                            <i class="fa fa-exclamation-circle"></i> {{ $errorPassword }}
-                        </div>
-                    @endif
-                </div>
+        .signin-title {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
 
-                <button type="submit"
-                    class="w-full bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 text-white text-sm py-2 rounded-full hover:brightness-110 transition-all duration-300 shadow-md">
-                    <i class="fa fa-sign-in-alt mr-2"></i> Sign In
-                </button>
-            </form>
+        .signin-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
 
-            @if (isset($error))
-                <div class="text-red-500 text-sm mt-5 text-center flex items-center justify-center gap-2">
-                    <i class="fa fa-exclamation-triangle"></i> {{ $error }}
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, 0.25);
+        }
+
+        .btn-signin {
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn-signin:hover {
+            background: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-signin:active {
+            transform: translateY(0);
+        }
+
+        .copyright {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .field-error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading .btn-signin {
+            background: #6c757d;
+        }
+
+        .loading .spinner {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 576px) {
+            .signin-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+    @livewireStyles
+</head>
+<body>
+    <div class="signin-container">
+        <div class="app-icon">
+            <i class="fas fa-id-card"></i>
+        </div>
+        
+        <h2 class="signin-title">เข้าสู่ระบบ</h2>
+        <p class="signin-subtitle">ระบบจัดการหอพัก</p>
+
+        <form wire:submit.prevent="signin">
+            @if($error)
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {{ $error }}
                 </div>
             @endif
+
+            <div class="mb-3">
+                <input 
+                    type="text" 
+                    class="form-control @error('username') is-invalid @enderror" 
+                    placeholder="ชื่อผู้ใช้"
+                    wire:model="username"
+                    autocomplete="username"
+                >
+                @if($errorUsername)
+                    <div class="field-error">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        {{ $errorUsername }}
+                    </div>
+                @endif
+            </div>
+
+            <div class="mb-3">
+                <input 
+                    type="password" 
+                    class="form-control @error('password') is-invalid @enderror" 
+                    placeholder="รหัสผ่าน"
+                    wire:model="password"
+                    autocomplete="current-password"
+                >
+                @if($errorPassword)
+                    <div class="field-error">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        {{ $errorPassword }}
+                    </div>
+                @endif
+            </div>
+
+            <button type="submit" class="btn btn-signin" wire:loading.attr="disabled">
+                <div wire:loading class="spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <span wire:loading.remove>เข้าสู่ระบบ</span>
+                <span wire:loading>กำลังเข้าสู่ระบบ...</span>
+            </button>
+        </form>
+
+        <div class="copyright">
+            © 2025 Visitor Management System
         </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @livewireScripts
+</body>
+</html>

@@ -22,6 +22,7 @@ class Signin extends Component
 
         $this->errorUsername = null;
         $this->errorPassword = null;
+        $this->error = null;
 
         $validator = Validator::make([
             'username' => $this->username,
@@ -29,6 +30,9 @@ class Signin extends Component
         ], [
             'username' => 'required',
             'password' => 'required'
+        ], [
+            'username.required' => 'กรุณากรอกชื่อผู้ใช้',
+            'password.required' => 'กรุณากรอกรหัสผ่าน'
         ]);
 
         if ($validator->fails()) {
@@ -43,13 +47,24 @@ class Signin extends Component
                     session()->put('user_name', $user->name);
                     session()->put('user_level', $user->level);
 
-                    $this->redirect('/dashboard');
+                    logger('Signin successful', [
+                        'user_id' => $user->id,
+                        'username' => $user->name
+                    ]);
+
+                    return $this->redirect('/dashboard');
                 } else {
                     $this->error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+                    
+                    logger('Signin failed', [
+                        'username' => $this->username,
+                        'reason' => 'Invalid credentials'
+                    ]);
                 }
             } catch (\Exception $e) {
                 logger('Signin error', [
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
+                    'username' => $this->username
                 ]);
                 $this->error = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
             }
