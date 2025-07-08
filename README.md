@@ -10,7 +10,7 @@
 # 🏠 Dormitory_
 
 **Dormitory_** คือระบบบริหารจัดการหอพักออนไลน์ ที่พัฒนาด้วย [Laravel](https://laravel.com/) และ [Livewire](https://livewire.laravel.com/)  
-ช่วยให้เจ้าของหอพักสามารถจัดการผู้เช่า ห้องพัก ค่าน้ำ ค่าไฟ ฯลฯ ได้สะดวกผ่านเว็บแอป
+ช่วยให้เจ้าของหอพักสามารถจัดการผู้เช่า ห้องพัก ค่าน้ำ ค่าไฟ ค่าอื่นๆ ได้สะดวกผ่านเว็บแอป
 
 ## 🔧 Features
 
@@ -22,9 +22,9 @@
 - ✅ พัฒนาด้วย Laravel + Livewire + AI
 
 เครื่องมือและเทคโนโลยีที่ใช้
-💻 ภาษาโปรแกรม	PHP , JavaScript
-🌐 Framework Backend	Laravel
-⚡ Component Frontend	Livewire
-🎨 UI/UX	TailwindCSS, FontAwesome
-🗄️ ฐานข้อมูล	MySQL
-🔧 Package Manager	Composer
+- 💻 ภาษาโปรแกรม	PHP , JavaScript
+- 🌐 Framework Backend	Laravel
+- ⚡ Component Frontend	Livewire
+- 🎨 UI/UX	TailwindCSS, FontAwesome
+- 🗄️ ฐานข้อมูล	MySQL
+- 🔧 Package Manager	Composer
