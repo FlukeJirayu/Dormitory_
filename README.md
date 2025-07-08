@@ -20,3 +20,11 @@
 - ✅ คิดค่าน้ำ ค่าไฟ ค่าอินเทอร์เน็ต
 - ✅ UI/UX สวยงามด้วย Tailwind CSS + FontAwesome
 - ✅ พัฒนาด้วย Laravel + Livewire + AI
+
+เครื่องมือและเทคโนโลยีที่ใช้
+💻 ภาษาโปรแกรม	PHP , JavaScript
+🌐 Framework Backend	Laravel
+⚡ Component Frontend	Livewire
+🎨 UI/UX	TailwindCSS, FontAwesome
+🗄️ ฐานข้อมูล	MySQL
+🔧 Package Manager	Composer
